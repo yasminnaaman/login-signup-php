@@ -1,0 +1,19 @@
+.input-textbox label {
+  display: block;
+  margin-top: 10px;
+  color: antiquewhite;
+  font-size: 1.1rem;
+}
+
+.input-textbox input {
+  margin-bottom: 10px;
+}
+
+.submit-button input {
+  width: 134px;
+  background-color: rgb(141, 98, 18);
+}
+
+.submit-button input:hover {
+  background-color: #dab974;
+}

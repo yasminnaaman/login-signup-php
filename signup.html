@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup-page</title>
+  <link rel="stylesheet" href="styles/login.css" />
+  <link rel="stylesheet" href="styles/signup.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+  <div class="container">
+    <div class="logintext">
+      <p>Create A New Account!</p>
+    </div>
+    <div class="login-form">
+      <form action="phpscripts/signup.php" method="post" onsubmit="return passwordverification()">
+        <div class="input-textbox">
+          <label for="fname">First Name:</label>
+          <input type="text" name="fname" placeholder="First Name" required>
+
+          <label for="lname">Last Name:</label>
+          <input type="text" name="lname" placeholder="Last Name" required>
+
+          <label for="email">Email:</label>
+          <input type="email" name="email" placeholder="Email" required>
+
+          <label for="password">Password:</label>
+          <input type="password" name="password" placeholder="Password" id="pass" required>
+
+          <label for="confirmpass">Confirm Password:</label>
+          <input type="password" name="confirmpass" placeholder="Confirm Password" id="pass2" required>
+        </div>
+        <div class="submit-button">
+          <input type="submit" name="submit" value="Create Account!">
+          
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function passwordverification(){
+    const verifier=document.getElementById("pass").value;
+    const verifier2=document.getElementById("pass2").value;
+    if(verifier!==verifier2){
+        alert("passwords do not match,try again!")
+        return false;
+    
+    }
+    return true;
+}
+  </script>
+</body>
+</html>

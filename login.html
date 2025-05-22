@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login-page</title>
+    <link rel="stylesheet" href="styles/login.css"/>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+
+    <div class="container">
+         <div class="logintext">
+       <p> Log In to Your Account!</p>
+    </div>
+    <div class="login-form">
+        <form action="phpscripts/login.php" method="post">
+            <div class="input-textbox">
+                <input type="text" name="name" placeholder="username">
+                <input type="password" name="password" placeholder="password">
+            </div>
+            <div class="submit-button">
+                <input type="submit" name="submit">
+            </div>
+            <div class="extras">
+                <a href="#">Forgot password?</a>
+                <p>or</p>
+                <a href="signup.html">SignUp!</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
