@@ -1,47 +1,31 @@
 <?php
-// Connect to database
-$conn = new mysqli("localhost", "root", "", "user_account");
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    require 'db.php';
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    $email = $_POST['name']; // from form field "name"
+    $password = $_POST['password'];
 
-// Handle login
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize email input
-    $email = $conn->real_escape_string($_POST["email"]);
-    $password = $_POST["password"];
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
 
-    // Query user by email
-    $query = $conn->query("SELECT * FROM users WHERE email = '$email'");
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
 
-    if ($query && $query->num_rows === 1) {
-        $user = $query->fetch_assoc();
-
-        // Verify hashed password
-        if (password_verify($password, $user['password'])) {
-            echo "<script>
-                    window.onload = () => {
-                        Swal.fire('Welcome!', 'Login successful!', 'success')
-                        .then(() => window.location.href='dashboard.html');
-                    };
-                  </script>";
-        } else {
-            echo "<script>
-                    window.onload = () => {
-                        Swal.fire('Oops', 'Incorrect password.', 'error');
-                    };
-                  </script>";
-        }
+    if ($user && password_verify($password, $user['password'])) {
+        echo "<script>
+                Swal.fire('Welcome!', 'Login successful.', 'success')
+                .then(() => window.location.href = '../welcome.html'); // <- Change to your homepage
+              </script>";
     } else {
         echo "<script>
-                window.onload = () => {
-                    Swal.fire('Error', 'No account found with that email.', 'error');
-                };
+                Swal.fire('Failed', 'Incorrect credentials. Please sign up.', 'error')
+                .then(() => window.location.href = '../signup.html');
               </script>";
     }
+
+    $stmt->close();
+    $conn->close();
 }
 ?>
-
-<!-- Include SweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

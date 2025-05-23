@@ -1,48 +1,31 @@
 <?php
-// Connect to database
-$conn = new mysqli("localhost", "root", "", "user_account");
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    require 'db.php';
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Connected to database successfully.";
-}
+    $fname = $_POST['fname'];
+    $lname = $_POST['lname'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-// Handle signup
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $fname = $conn->real_escape_string($_POST["fname"]);
-    $lname = $conn->real_escape_string($_POST["lname"]);
-    $email = $conn->real_escape_string($_POST["email"]);
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    // Hash the password before saving
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Check if email exists
-    $check = $conn->query("SELECT * FROM users WHERE email = '$email'");
-    if ($check->num_rows > 0) {
+    $sql = "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssss", $fname, $lname, $email, $hashedPassword);
+
+    if ($stmt->execute()) {
         echo "<script>
-                window.onload = () => {
-                    Swal.fire('Error', 'Email already exists!', 'error');
-                };
+                Swal.fire('Success!', 'Account created successfully!', 'success')
+                .then(() => window.location.href = '../login.html');
               </script>";
     } else {
-        $insert = $conn->query("INSERT INTO users (fname, lname, email, password) VALUES ('$fname', '$lname', '$email', '$password')");
-        if ($insert) {
-            echo "<script>
-                    window.onload = () => {
-                        Swal.fire('Success', 'Account created!', 'success')
-                        .then(() => window.location.href='login.html');
-                    };
-                  </script>";
-        } else {
-            $error = $conn->error;
-            echo "<script>
-                    window.onload = () => {
-                        Swal.fire('Error', 'Signup failed. Try again!<br>Error: $error', 'error');
-                    };
-                  </script>";
-        }
+        echo "<script>
+                Swal.fire('Error', 'Email already exists or something went wrong.', 'error');
+              </script>";
     }
+
+    $stmt->close();
+    $conn->close();
 }
 ?>
-
-<!-- Include SweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
